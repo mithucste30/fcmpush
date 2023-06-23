@@ -98,7 +98,7 @@ module Fcmpush
         uri.query = URI.encode_www_form(query) unless query.empty?
 
         if configuration.legacy_authorized_header.present?
-          headers = headers.merge(configuration.legacy_authorized_header.call(self))
+          headers = headers.merge(configuration.legacy_authorized_header)
         else
           headers = legacy_authorized_header(headers)
         end
@@ -123,6 +123,8 @@ module Fcmpush
       end
 
       def legacy_authorized_header(headers)
+        return headers.merge(yield) if block_given?
+
         headers.merge('Content-Type' => 'application/json',
                       'Accept' => 'application/json',
                       'Authorization' => "Bearer key=#{server_key}")
