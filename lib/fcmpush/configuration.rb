@@ -1,6 +1,6 @@
 module Fcmpush
   class Configuration
-    attr_accessor :scope, :json_key_io, :server_key
+    attr_accessor :scope, :json_key_io, :server_key, :legacy_authorized_header
 
     def initialize
       @scope = ['https://www.googleapis.com/auth/firebase.messaging']
@@ -16,6 +16,8 @@ module Fcmpush
 
       # regacy auth
       @server_key = ENV['FCM_SERVER_KEY']
+
+      @legacy_authorized_header = nil
     end
   end
 end

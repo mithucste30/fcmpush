@@ -98,7 +98,12 @@ module Fcmpush
         uri = URI.join(TOPIC_DOMAIN, TOPIC_ENDPOINT_PREFIX + suffix)
         uri.query = URI.encode_www_form(query) unless query.empty?
 
-        headers = legacy_authorized_header(headers)
+        if configuration.legacy_authorized_header.present?
+          headers = headers.merge(configuration.legacy_authorized_header { yield self })
+        else
+          headers = legacy_authorized_header(headers)
+        end
+
         post = Net::HTTP::Post.new(uri, headers)
         post.body = make_subscription_body(topic, *instance_ids)
 
